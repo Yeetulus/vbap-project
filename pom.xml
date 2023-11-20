@@ -86,6 +86,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>vbapproject</finalName>
     </build>
 
 </project>

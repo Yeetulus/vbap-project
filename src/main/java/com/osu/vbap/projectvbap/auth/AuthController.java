@@ -7,8 +7,10 @@ import com.osu.vbap.projectvbap.auth.model.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login/authenticate")
     public ResponseEntity<AuthResponse> authenticate(
-            @RequestBody AuthRequest request
+            @Valid @RequestBody AuthRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
@@ -38,9 +40,19 @@ public class AuthController {
     public ResponseEntity<AuthResponse> registerLibrarian(
             @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(service.registerLibrarian(request));
+        ResponseEntity<AuthResponse> response = ResponseEntity.ok(service.registerLibrarian(request));
+        System.out.println(response);
+        return response;
     }
-    @PostMapping("/user/refresh-token")
+
+    @PutMapping("/admin/change-password")
+    public ResponseEntity<Boolean> forceChangePassword(
+            @Valid @RequestBody ChangePasswordRequest passwordRequest,
+            HttpServletRequest request){
+
+        return ResponseEntity.ok(service.forceChangePassword(passwordRequest, request));
+    }
+    @PostMapping("/login/refresh-token")
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
@@ -50,9 +62,10 @@ public class AuthController {
 
     @PutMapping("/user/change-password")
     public ResponseEntity<Boolean> changePassword(
-            @Valid @RequestBody ChangePasswordRequest request){
+            @Valid @RequestBody ChangePasswordRequest passwordRequest,
+            HttpServletRequest request){
 
-        return ResponseEntity.ok(service.changePassword(request));
+        return ResponseEntity.ok(service.changePassword(passwordRequest, request));
     }
 
 }

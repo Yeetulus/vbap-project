@@ -1,30 +1,16 @@
 package com.osu.vbap.projectvbap.library.loan;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.osu.vbap.projectvbap.library.book.Book;
+import com.osu.vbap.projectvbap.library.copy.BookCopy;
+import com.osu.vbap.projectvbap.user.User;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class LoanService {
-
-    private final LoanRepository loanRepository;
-
-    public Loan saveLoan(Loan loan) {
-        return loanRepository.save(loan);
-    }
-
-    public List<Loan> getAllLoans() {
-        return loanRepository.findAll();
-    }
-
-    public Optional<Loan> getLoanById(Long id) {
-        return loanRepository.findById(id);
-    }
-
-    public void deleteLoan(Long id) {
-        loanRepository.deleteById(id);
-    }
+public interface LoanService {
+    Loan createLoan(User user, BookCopy bookCopy);
+    List<Loan> getAllLoans();
+    List<Loan> getAllLoansByBook(Book book);
+    List<Loan> getAllLoansByUser(User user);
+    Loan getLoanById(Long id);
+    void deleteLoan(Long id);
 }

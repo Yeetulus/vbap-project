@@ -1,41 +1,18 @@
 package com.osu.vbap.projectvbap.library.author;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class AuthorService {
+public interface AuthorService {
 
-    private final AuthorRepository authorRepository;
+    List<Author> getAllAuthors();
 
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
-    }
+    Author getAuthorById(Long id);
+    Author getAuthorByName(String name);
 
-    public Optional<Author> getAuthorById(Long id) {
-        return authorRepository.findById(id);
-    }
+    Author createAuthor(String name);
 
-    public Author createAuthor(Author author) {
-        return authorRepository.save(author);
-    }
+    Author updateAuthor(Long id, String newName);
 
-    public Author updateAuthor(Long id, Author author) {
-        if (authorRepository.existsById(id)) {
-            author.setId(id);
-            return authorRepository.save(author);
-        }
-        return null;
-    }
-
-    public boolean deleteAuthor(Long id) {
-        if (authorRepository.existsById(id)) {
-            authorRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
+    boolean deleteAuthorById(Long id);
+    boolean deleteAuthorByName(String name);
 }

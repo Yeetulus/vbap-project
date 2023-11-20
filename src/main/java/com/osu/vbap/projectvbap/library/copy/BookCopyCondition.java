@@ -1,4 +1,4 @@
-package com.osu.vbap.projectvbap.library.book;
+package com.osu.vbap.projectvbap.library.copy;
 
 
 public enum BookCopyCondition {

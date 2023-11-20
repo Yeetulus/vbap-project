@@ -10,23 +10,25 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.osu.vbap.projectvbap.user.Role.ADMIN;
-import static com.osu.vbap.projectvbap.user.Role.MEMBER;
+import static com.osu.vbap.projectvbap.user.Permission.*;
+import static com.osu.vbap.projectvbap.user.Role.*;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-@Order(1)
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URL = {
+    public static final String[] WHITE_LIST_URL = {
+            "/api/auth/refresh-token",
             "/api/auth/login/**",
             "/api-docs",
             "/configuration/ui",
@@ -36,6 +38,7 @@ public class SecurityConfig {
             "/swagger-resources",
             "/swagger-resources/**",
             "/swagger-ui.html"};
+
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
@@ -44,11 +47,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/auth/admin/**").hasRole(ADMIN.name())
-                        .requestMatchers("/api/auth/user/**").authenticated()
-                        .requestMatchers("/api/member/**").hasAnyRole(ADMIN.name(), MEMBER.name())
+
+                        // hasRole did not work for some reason
+                        .requestMatchers("/api/auth/admin/**").hasAuthority(ADMIN.name())
+                        .requestMatchers("/api/member/**").hasAnyAuthority(ADMIN.name(), MEMBER.name())
+                        .requestMatchers("/api/librarian/**").hasAnyAuthority(LIBRARIAN.name(), ADMIN.name())
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

@@ -1,12 +1,9 @@
 package com.osu.vbap.projectvbap.library.loan;
 
-import com.osu.vbap.projectvbap.library.book.BookCopy;
+import com.osu.vbap.projectvbap.library.copy.BookCopy;
 import com.osu.vbap.projectvbap.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -14,6 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 public class Loan {
     @Id

@@ -1,30 +1,16 @@
 package com.osu.vbap.projectvbap.library.reservation;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.osu.vbap.projectvbap.library.book.Book;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-public class ReservationService {
+public interface ReservationService {
 
-    private final ReservationRepository reservationRepository;
-
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
-
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
-    }
-
-    public Optional<Reservation> getReservationById(Long id) {
-        return reservationRepository.findById(id);
-    }
-
-    public void deleteReservation(Long id) {
-        reservationRepository.deleteById(id);
-    }
+    Reservation createReservation(Long bookId, Long userId);
+    Reservation saveReservation(Reservation reservation);
+    void cancelPotentialReservation(Long bookId, Long userId);
+    List<Reservation> getAllReservations();
+    Reservation getReservationById(Long id);
+    List<Reservation> getReservationsByBook(Book book);
+    void deleteReservation(Long id);
 }
