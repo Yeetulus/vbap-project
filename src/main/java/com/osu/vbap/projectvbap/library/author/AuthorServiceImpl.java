@@ -1,12 +1,12 @@
 package com.osu.vbap.projectvbap.library.author;
 
+import com.osu.vbap.projectvbap.exception.ItemAlreadyExistsException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageName;
+import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +17,11 @@ public class AuthorServiceImpl implements AuthorService{
     @Override
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
+    }
+
+    @Override
+    public List<Author> getAuthorsByIds(List<Long> ids) {
+        return authorRepository.findAllById(ids);
     }
 
     @Override
@@ -31,6 +36,7 @@ public class AuthorServiceImpl implements AuthorService{
     }
     @Override
     public Author createAuthor(String name) {
+        if(authorRepository.existsByName(name)) throw new ItemAlreadyExistsException(String.format(alreadyExistsMessageName, "Author", name));
         var newAuthor = Author.builder()
                         .name(name.toLowerCase()).build();
         return authorRepository.save(newAuthor);

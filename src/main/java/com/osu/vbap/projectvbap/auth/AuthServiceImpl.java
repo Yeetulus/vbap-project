@@ -30,7 +30,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageName;
 import static com.osu.vbap.projectvbap.user.Role.ADMIN;
 
@@ -152,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }
     }
+    // TODO CHANGE TO VOID
     @Override
     public boolean changePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request){
         User requestUser = repository.findByEmail(passwordRequest.getEmail()).orElseThrow(() ->

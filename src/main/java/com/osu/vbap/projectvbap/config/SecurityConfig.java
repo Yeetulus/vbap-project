@@ -28,16 +28,19 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
     public static final String[] WHITE_LIST_URL = {
-            "/api/auth/refresh-token",
             "/api/auth/login/**",
-            "/api-docs",
+            "/api/library/**",
+
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
             "/configuration/ui",
             "/configuration/security",
             "/webjars/**",
-            "/swagger-ui/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/swagger-ui/**"};
 
     private final JwtFilter jwtFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -51,12 +54,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(WHITE_LIST_URL).permitAll()
 
-                        // hasRole did not work for some reason
-                        .requestMatchers("/api/auth/admin/**").hasAuthority(ADMIN.name())
+                        .requestMatchers("/api/admin/**").hasAuthority(ADMIN.name())
                         .requestMatchers("/api/member/**").hasAnyAuthority(ADMIN.name(), MEMBER.name())
                         .requestMatchers("/api/librarian/**").hasAnyAuthority(LIBRARIAN.name(), ADMIN.name())
 
-                        .anyRequest().authenticated()
+                        // TODO AUTHENTICATED()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

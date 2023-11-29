@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessage;
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 
 @Service
@@ -39,7 +40,7 @@ public class ReservationServiceImpl implements ReservationService {
         });
 
         int availableCount = bookService.getAvailableCount(bookToReserve);
-        if(availableCount <= reservations.size()) throw new ItemNotAvailableException(String.format("Book %s is not available", bookId));
+        if(availableCount <= reservations.size()) throw new ItemNotAvailableException(String.format("Book with ID %s is not available", bookId));
 
         var reservation = Reservation.builder()
                 .book(bookToReserve)
@@ -60,6 +61,14 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservationRepository.delete(reservation.get());
         logger.info(String.format("Canceled reservation %s", reservation.get().getId()));
+    }
+
+    @Override
+    public void cancelReservation(Long bookId, Long userId) {
+        var reservation = reservationRepository.findByBook_IdAndUser_Id(bookId, userId).orElseThrow(() ->
+                new ItemNotFoundException(notFoundMessage));
+
+        reservationRepository.delete(reservation);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.osu.vbap.projectvbap.library.author;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.book.Book;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Set;
@@ -20,6 +21,7 @@ public class Author {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotBlank
     private String name;
 
     @ManyToMany

@@ -155,7 +155,6 @@ public class JwtServiceImpl implements JwtService {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
             final String warnMessage = "Header requirements not met, could not parse token from Bearer header";
-            logger.warn(warnMessage);
             throw new BadTokenFormatException(warnMessage);
         }
         return authHeader.substring(7);

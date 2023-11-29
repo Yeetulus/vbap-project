@@ -9,6 +9,7 @@ public interface ReservationService {
     Reservation createReservation(Long bookId, Long userId);
     Reservation saveReservation(Reservation reservation);
     void cancelPotentialReservation(Long bookId, Long userId);
+    void cancelReservation(Long bookId, Long userId);
     List<Reservation> getAllReservations();
     Reservation getReservationById(Long id);
     List<Reservation> getReservationsByBook(Book book);

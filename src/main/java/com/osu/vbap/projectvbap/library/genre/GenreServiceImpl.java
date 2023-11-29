@@ -1,5 +1,6 @@
 package com.osu.vbap.projectvbap.library.genre;
 
+import com.osu.vbap.projectvbap.exception.ItemAlreadyExistsException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -7,8 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageName;
+import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +25,12 @@ public class GenreServiceImpl implements GenreService{
     }
     @Override
     public Genre createGenre(String genreName) {
+        if(genreRepository.existsByName(genreName))
+            throw new ItemAlreadyExistsException(String.format(alreadyExistsMessageName, "Genre", genreName));
+
         var newGenre = Genre.builder()
                 .name(genreName.toLowerCase(Locale.ROOT)).build();
+
         return genreRepository.save(newGenre);
     }
     @Override

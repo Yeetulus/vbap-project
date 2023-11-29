@@ -1,21 +1,24 @@
-package com.osu.vbap.projectvbap.user;
+package com.osu.vbap.projectvbap.library;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.osu.vbap.projectvbap.auth.model.AuthResponse;
-import com.osu.vbap.projectvbap.auth.model.RegisterRequest;
 import com.osu.vbap.projectvbap.library.author.Author;
 import com.osu.vbap.projectvbap.library.author.AuthorService;
+import com.osu.vbap.projectvbap.library.book.Book;
+import com.osu.vbap.projectvbap.library.book.BookRequest;
 import com.osu.vbap.projectvbap.library.book.BookService;
+import com.osu.vbap.projectvbap.library.copy.BookCopy;
+import com.osu.vbap.projectvbap.library.copy.BookCopyCondition;
+import com.osu.vbap.projectvbap.library.copy.BookCopyService;
 import com.osu.vbap.projectvbap.library.genre.Genre;
 import com.osu.vbap.projectvbap.library.genre.GenreService;
+import com.osu.vbap.projectvbap.library.loan.Loan;
 import com.osu.vbap.projectvbap.library.loan.LoanService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.ErrorResponse;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,11 +29,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LibrarianController {
 
-    private final BookService bookService;
     private final LoanService loanService;
     private final GenreService genreService;
     private final AuthorService authorService;
-
+    private final BookCopyService bookCopyService;
+    private final BookService bookService;
     private static final String paramMessage = "Either id or name must be present in the request";
 
 // region Genre
@@ -55,7 +58,7 @@ public class LibrarianController {
         return ResponseEntity.ok(genreService.deleteGenre(genreName));
     }
 
-    @GetMapping("genre/get")
+    @GetMapping("/genre/get")
     public ResponseEntity<Genre> getGenre(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String name){
@@ -66,18 +69,14 @@ public class LibrarianController {
         else return ResponseEntity.ok(genreService.getByName(name));
     }
 
-    @GetMapping("genre/get-all")
-    public ResponseEntity<List<Genre>> getAllGenres(){
-        return ResponseEntity.ok(genreService.getAllGenres());
-    }
-
 // endregion Genre
+
 // region Author
     @PostMapping("/author/create")
     public ResponseEntity<Author> createAuthor(
             @NotBlank @RequestParam String name
     ) {
-        return ResponseEntity.ok(authorService.createAuthor(name));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorService.createAuthor(name));
     }
     @PutMapping("/author/update")
     public ResponseEntity<Author> updateAuthor(
@@ -113,13 +112,53 @@ public class LibrarianController {
     }
 
 // endregion Author
+
 // region Loans
 
-
-
-
-
+    @PostMapping("/loan/create")
+    public ResponseEntity<Loan> createLoan(
+            @RequestParam Long userId,
+            @RequestParam Long copyId
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.createLoan(userId, copyId));
+    }
+    @PutMapping("/loan/return")
+    public ResponseEntity<Void> updateLoan(
+            @RequestParam Long loanId
+    ) {
+        loanService.returnCopy(loanId);
+        return ResponseEntity.ok().build();
+    }
 
 // endregion Loans
+
+// region Books
+
+    @PostMapping("/book/create")
+    public ResponseEntity<Book> createBook(@Valid @RequestBody BookRequest request){
+        return ResponseEntity.ok(bookService.createBook(request));
+    }
+    @PutMapping("/book/update")
+    public ResponseEntity<Book> updateBook(@Valid @RequestBody BookRequest request){
+        return ResponseEntity.ok(bookService.updateBook(request));
+    }
+
+
+// endregion Books
+
+// region Copies
+
+    @PostMapping("/copy/create")
+    public ResponseEntity<BookCopy> createBookCopy(@NonNull @RequestParam Long bookId){
+        return ResponseEntity.ok(bookCopyService.createCopy(bookId));
+    }
+    @PutMapping("/copy/update")
+    public ResponseEntity<BookCopy> updateBookCopy(@NonNull @RequestParam Long bookId,
+                                                   @NonNull @RequestParam BookCopyCondition condition){
+        return ResponseEntity.ok(bookCopyService.updateCopy(bookId, condition));
+    }
+
+
+// endregion Copies
 
 }

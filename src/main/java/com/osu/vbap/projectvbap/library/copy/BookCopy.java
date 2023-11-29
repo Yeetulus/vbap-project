@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.loan.Loan;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookCopy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

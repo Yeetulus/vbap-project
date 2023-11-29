@@ -2,9 +2,8 @@ package com.osu.vbap.projectvbap.library.review;
 
 import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,8 @@ import lombok.Setter;
 @Entity
 public class Review {
     @Id
-    Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     private Book book;

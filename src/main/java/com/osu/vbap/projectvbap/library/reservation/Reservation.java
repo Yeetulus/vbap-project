@@ -3,10 +3,7 @@ package com.osu.vbap.projectvbap.library.reservation;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -17,7 +14,7 @@ import lombok.*;
 @Entity
 public class Reservation {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

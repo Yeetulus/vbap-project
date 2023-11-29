@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,31 +27,13 @@ public class AuthController {
     public ResponseEntity<AuthResponse> registerUser(
             @Valid @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(service.registerUser(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.registerUser(request));
     }
-
     @PostMapping("/login/authenticate")
     public ResponseEntity<AuthResponse> authenticate(
             @Valid @RequestBody AuthRequest request
     ) {
         return ResponseEntity.ok(service.authenticate(request));
-    }
-
-    @PostMapping("/admin/register-librarian")
-    public ResponseEntity<AuthResponse> registerLibrarian(
-            @Valid @RequestBody RegisterRequest request
-    ) {
-        ResponseEntity<AuthResponse> response = ResponseEntity.ok(service.registerLibrarian(request));
-        System.out.println(response);
-        return response;
-    }
-
-    @PutMapping("/admin/change-password")
-    public ResponseEntity<Boolean> forceChangePassword(
-            @Valid @RequestBody ChangePasswordRequest passwordRequest,
-            HttpServletRequest request){
-
-        return ResponseEntity.ok(service.forceChangePassword(passwordRequest, request));
     }
     @PostMapping("/login/refresh-token")
     public void refreshToken(
@@ -59,7 +42,6 @@ public class AuthController {
     ) throws IOException {
         service.refreshToken(request, response);
     }
-
     @PutMapping("/user/change-password")
     public ResponseEntity<Boolean> changePassword(
             @Valid @RequestBody ChangePasswordRequest passwordRequest,
