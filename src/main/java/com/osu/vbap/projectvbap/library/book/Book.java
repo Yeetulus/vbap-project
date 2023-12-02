@@ -1,5 +1,6 @@
 package com.osu.vbap.projectvbap.library.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.copy.BookCopy;
 import com.osu.vbap.projectvbap.library.genre.Genre;
@@ -38,13 +39,14 @@ public class Book {
     private Set<Author> authors;
 
     @OneToMany(mappedBy = "book")
-    @JsonIgnoreProperties("book")
+    @JsonIgnoreProperties({"book"})
     private Set<BookCopy> copies;
 
     @OneToMany(mappedBy = "book")
-    @JsonIgnoreProperties({"user, book"})
+    @JsonIgnore
     private Set<Review> reviews;
 
     @OneToMany(mappedBy = "book")
+    @JsonIgnore
     private Set<Reservation> reservations;
 }

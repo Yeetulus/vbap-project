@@ -22,15 +22,14 @@ public class BookServiceImpl implements BookService{
 
     private final BookRepository bookRepository;
     private final GenreService genreService;
-    private final BookCopyService bookCopyService;
     private final AuthorService authorService;
 
-    public List<Book> searchBooks(String searchedValue, List<String> genres, boolean searchOnlyAvailable) {
+    public List<Book> searchBooks(String searchedValue, List<Long> genres, boolean searchOnlyAvailable) {
         List<Book> books;
         if (searchedValue != null && !searchedValue.isEmpty() && genres != null && !genres.isEmpty()) {
             books = bookRepository.findByValueAndGenres(genres, searchedValue);
         } else if (genres != null && !genres.isEmpty()) {
-            books = bookRepository.findByGenre_NameInIgnoreCase(genres);
+            books = bookRepository.findAllByGenreIdIn(genres);
         } else if (searchedValue != null && !searchedValue.isEmpty()) {
             books = bookRepository.findByValue(searchedValue);
         } else {
@@ -38,10 +37,7 @@ public class BookServiceImpl implements BookService{
         }
 
         if (searchOnlyAvailable) {
-            books = books.stream()
-                    .filter(book -> book.getCopies().stream()
-                            .allMatch(copy -> copy.getBookCondition().equals(BookCopyCondition.AVAILABLE)))
-                    .toList();
+            books = books.stream().filter(book -> getAvailableCount(book) > 0).toList();
         }
         return books;
     }
@@ -55,13 +51,19 @@ public class BookServiceImpl implements BookService{
     @Override
     public int getAvailableCount(Book book) {
         int count = 0;
-        List<BookCopy> copies = bookCopyService.getCopiesByBook(book);
-        for (BookCopy copy : copies) {
-            if (copy.getBookCondition().equals(BookCopyCondition.AVAILABLE)) {
+        for (BookCopy copy : book.getCopies()) {
+            if (copy.getBookCondition().equals(BookCopyCondition.AVAILABLE)
+            ) {
                 count++;
             }
         }
-        return count;
+        return count - book.getReservations().size();
+    }
+
+    @Override
+    public int getAvailableCount(Long id) {
+        var book = getBook(id);
+        return getAvailableCount(book);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Book updateBook(BookRequest request) {
-        if(request.getBookId()==null) throw new NullPointerException("Book id not found");
+        if(request.getBookId()==null) throw new NullPointerException("Book id not found in request");
 
         var book = getBook(request.getBookId());
         var genre = genreService.getById(request.getGenreId());

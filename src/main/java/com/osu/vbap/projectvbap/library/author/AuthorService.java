@@ -13,6 +13,6 @@ public interface AuthorService {
     Author createAuthor(String name);
     Author updateAuthor(Long id, String newName);
 
-    boolean deleteAuthorById(Long id);
-    boolean deleteAuthorByName(String name);
+    void deleteAuthorById(Long id);
+    void deleteAuthorByName(String name);
 }

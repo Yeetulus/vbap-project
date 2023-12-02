@@ -8,7 +8,7 @@ public interface BookCopyService {
 
     BookCopy createCopy(Long bookId);
     BookCopy updateCopy(Long copyId, BookCopyCondition condition);
-    void deleteCopy(Long copyId);
+    BookCopy updateCopy(BookCopy copy, BookCopyCondition condition);
     BookCopy getCopy(Long copyId);
-    List<BookCopy> getCopiesByBook(Book book);
+    List<BookCopy> getCopiesByBook(Long bookId);
 }

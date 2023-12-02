@@ -13,8 +13,8 @@ import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMe
 @Service
 @RequiredArgsConstructor
 public class BookCopyServiceImpl implements BookCopyService{
-    private BookService bookService;
-    private BookCopyRepository bookCopyRepository;
+    private final BookService bookService;
+    private final BookCopyRepository bookCopyRepository;
     @Override
     public BookCopy createCopy(Long bookId) {
         var book = bookService.getBook(bookId);
@@ -32,15 +32,13 @@ public class BookCopyServiceImpl implements BookCopyService{
         var copy = bookCopyRepository.findById(copyId).orElseThrow(()->
                 new ItemNotFoundException(String.format(notFoundMessageId,copyId)));
 
-        copy.setBookCondition(condition);
-        return bookCopyRepository.save(copy);
+        return updateCopy(copy, condition);
     }
 
     @Override
-    public void deleteCopy(Long copyId) {
-        var copy = bookCopyRepository.findById(copyId).orElseThrow(()->
-                new ItemNotFoundException(String.format(notFoundMessageId,copyId)));
-        bookCopyRepository.delete(copy);
+    public BookCopy updateCopy(BookCopy copy, BookCopyCondition condition) {
+        copy.setBookCondition(condition);
+        return bookCopyRepository.save(copy);
     }
 
     @Override
@@ -50,7 +48,8 @@ public class BookCopyServiceImpl implements BookCopyService{
     }
 
     @Override
-    public List<BookCopy> getCopiesByBook(Book book) {
+    public List<BookCopy> getCopiesByBook(Long bookId) {
+        var book = bookService.getBook(bookId);
         return bookCopyRepository.findAllByBook(book);
     }
 }

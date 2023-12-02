@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class ReviewMessageDTO {
 
+    private Long bookId;
     private String name;
     private String comment;
     private int rating;

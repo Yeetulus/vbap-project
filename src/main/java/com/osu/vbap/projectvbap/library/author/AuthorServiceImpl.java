@@ -31,14 +31,16 @@ public class AuthorServiceImpl implements AuthorService{
     }
     @Override
     public Author getAuthorByName(String name) {
-        return authorRepository.findByName(name.toLowerCase()).orElseThrow(() ->
+        return authorRepository.findByName(name).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, name)));
     }
     @Override
     public Author createAuthor(String name) {
-        if(authorRepository.existsByName(name)) throw new ItemAlreadyExistsException(String.format(alreadyExistsMessageName, "Author", name));
+        if(authorRepository.existsByName(name))
+            throw new ItemAlreadyExistsException(String.format(alreadyExistsMessageName, "Author", name));
+
         var newAuthor = Author.builder()
-                        .name(name.toLowerCase()).build();
+                        .name(name).build();
         return authorRepository.save(newAuthor);
     }
     @Override
@@ -50,19 +52,17 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
-    public boolean deleteAuthorById(Long id) {
+    public void deleteAuthorById(Long id) {
         var authorToDelete = authorRepository.findById(id).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, id)));
         authorRepository.delete(authorToDelete);
-        return true;
     }
 
     @Override
-    public boolean deleteAuthorByName(String name) {
+    public void deleteAuthorByName(String name) {
         var authorToDelete = authorRepository.findByName(name).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, name)));
         authorRepository.delete(authorToDelete);
-        return true;
     }
 
 }

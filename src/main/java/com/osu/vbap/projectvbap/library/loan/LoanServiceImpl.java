@@ -3,6 +3,7 @@ package com.osu.vbap.projectvbap.library.loan;
 import com.osu.vbap.projectvbap.exception.ItemNotAvailableException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import com.osu.vbap.projectvbap.exception.ItemNotOwnedException;
+import com.osu.vbap.projectvbap.exception.LoanAlreadyReturnedException;
 import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.copy.BookCopyCondition;
 import com.osu.vbap.projectvbap.library.copy.BookCopyService;
@@ -18,8 +19,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notOwnedMessage;
+import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +52,8 @@ public class LoanServiceImpl implements LoanService {
                 .build();
 
         reservationService.cancelPotentialReservation(bookCopy.getBook().getId(), userId);
+
+        bookCopyService.updateCopy(bookCopy, BookCopyCondition.BORROWED);
         return loanRepository.save(newLoan);
     }
 
@@ -59,6 +61,9 @@ public class LoanServiceImpl implements LoanService {
     public void returnCopy(Long loanId) {
         var loan = loanRepository.findById(loanId).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, loanId)));
+
+        if(loan.getActualReturnDate()!= null)
+            throw new LoanAlreadyReturnedException(String.format(alreadyReturnedMessageId, loanId));
 
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate today = LocalDate.now();
@@ -89,22 +94,24 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public List<Loan> getAllLoansByBook(Book book) {
-        return loanRepository.findAllByCopy_Book(book);
+    public List<Loan> getAllLoansByUser(User user) {
+        return loanRepository.findAllByUser(user);
     }
 
     @Override
-    public List<Loan> getAllLoansByUser(User user) {
-        return loanRepository.findAllByUser(user);
+    public List<Loan> getAllActiveLoansByUser(User user) {
+        return getAllLoansByUser(user).stream().filter(l -> l.getActualReturnDate() == null).toList();
+    }
+
+    @Override
+    public List<Loan> getAllLoansByUserId(Long id) {
+        var user = userService.getUser(id);
+        return getAllLoansByUser(user);
     }
 
     @Override
     public Loan getLoanById(Long id) {
         return loanRepository.findById(id).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, id)));
-    }
-    @Override
-    public void deleteLoan(Long id) {
-        loanRepository.deleteById(id);
     }
 }

@@ -41,11 +41,10 @@ public class GenreServiceImpl implements GenreService{
         return genreRepository.save(existingGenre);
     }
     @Override
-    public boolean deleteGenre(String genreName) {
+    public void deleteGenre(String genreName) {
         var toDelete = genreRepository.findByName(genreName).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, genreName)));
         genreRepository.delete(toDelete);
-        return true;
     }
 
     @Override
@@ -60,8 +59,4 @@ public class GenreServiceImpl implements GenreService{
                 new ItemNotFoundException(String.format(notFoundMessageName, name)));
     }
 
-    @Override
-    public List<Genre> getAllGenres() {
-        return genreRepository.findAll();
-    }
 }

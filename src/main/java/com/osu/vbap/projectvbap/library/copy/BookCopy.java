@@ -1,5 +1,6 @@
 package com.osu.vbap.projectvbap.library.copy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.loan.Loan;
@@ -21,7 +22,7 @@ public class BookCopy {
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    @JsonIgnoreProperties({"copies", "reviews"})
+    @JsonIgnoreProperties({"copies", "reviews", "loans"})
     private Book book;
 
     @Enumerated(EnumType.STRING)
@@ -29,6 +30,7 @@ public class BookCopy {
     private BookCopyCondition bookCondition = BookCopyCondition.AVAILABLE;
 
     @OneToMany(mappedBy = "copy")
+    @JsonIgnore
     private List<Loan> loans;
 
 }

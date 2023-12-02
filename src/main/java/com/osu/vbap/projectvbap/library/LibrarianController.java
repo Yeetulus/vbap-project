@@ -12,9 +12,11 @@ import com.osu.vbap.projectvbap.library.genre.Genre;
 import com.osu.vbap.projectvbap.library.genre.GenreService;
 import com.osu.vbap.projectvbap.library.loan.Loan;
 import com.osu.vbap.projectvbap.library.loan.LoanService;
+import com.osu.vbap.projectvbap.library.reservation.Reservation;
+import com.osu.vbap.projectvbap.library.reservation.ReservationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/librarian")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class LibrarianController {
 
     private final LoanService loanService;
@@ -34,6 +37,7 @@ public class LibrarianController {
     private final AuthorService authorService;
     private final BookCopyService bookCopyService;
     private final BookService bookService;
+    private final ReservationService reservationService;
     private static final String paramMessage = "Either id or name must be present in the request";
 
 // region Genre
@@ -55,7 +59,8 @@ public class LibrarianController {
     public ResponseEntity<Boolean> deleteGenre(
             @NotBlank @RequestParam String genreName
     ) {
-        return ResponseEntity.ok(genreService.deleteGenre(genreName));
+        genreService.deleteGenre(genreName);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/genre/get")
@@ -92,8 +97,10 @@ public class LibrarianController {
         if(id == null && name == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST , paramMessage);
         }
-        else if (id != null) return ResponseEntity.ok(authorService.deleteAuthorById(id));
-        else return ResponseEntity.ok(authorService.deleteAuthorByName(name));
+        else if (id != null) authorService.deleteAuthorById(id);
+        else authorService.deleteAuthorByName(name);
+
+        return ResponseEntity.ok().build();
     }
     @GetMapping("/author/get")
     public ResponseEntity<Author> getAuthor(
@@ -129,6 +136,14 @@ public class LibrarianController {
         loanService.returnCopy(loanId);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/loan/get")
+    public ResponseEntity<Loan> getLoan(@RequestParam Long loanId){
+        return ResponseEntity.ok(loanService.getLoanById(loanId));
+    }
+    @GetMapping("/loan/user-loans")
+    public ResponseEntity<List<Loan>> getUserLoans(@RequestParam Long userId) {
+        return ResponseEntity.ok(loanService.getAllLoansByUserId(userId));
+    }
 
 // endregion Loans
 
@@ -149,16 +164,38 @@ public class LibrarianController {
 // region Copies
 
     @PostMapping("/copy/create")
-    public ResponseEntity<BookCopy> createBookCopy(@NonNull @RequestParam Long bookId){
+    public ResponseEntity<BookCopy> createBookCopy(@RequestParam Long bookId){
         return ResponseEntity.ok(bookCopyService.createCopy(bookId));
     }
+    @GetMapping("/copy/get")
+    public ResponseEntity<BookCopy> getBookCopy(@RequestParam Long copyId){
+        return ResponseEntity.ok(bookCopyService.getCopy(copyId));
+    }
+    @GetMapping("/copy/get-all")
+    public ResponseEntity<List<BookCopy>> getAllCopies(@RequestParam Long bookId){
+        return ResponseEntity.ok(bookCopyService.getCopiesByBook(bookId));
+    }
     @PutMapping("/copy/update")
-    public ResponseEntity<BookCopy> updateBookCopy(@NonNull @RequestParam Long bookId,
-                                                   @NonNull @RequestParam BookCopyCondition condition){
-        return ResponseEntity.ok(bookCopyService.updateCopy(bookId, condition));
+    public ResponseEntity<BookCopy> updateBookCopy(@RequestParam Long copyId,
+                                                   @RequestParam BookCopyCondition condition){
+        return ResponseEntity.ok(bookCopyService.updateCopy(copyId, condition));
     }
 
 
 // endregion Copies
+
+// region Reservation
+
+    @GetMapping("/reservation/get-all-user")
+    public ResponseEntity<List<Reservation>> getUserReservations(@RequestParam Long userId){
+        return ResponseEntity.ok(reservationService.getUserReservations(userId));
+    }
+
+    @GetMapping("/reservation/get-all-book")
+    public ResponseEntity<List<Reservation>> getBookReservations(@RequestParam Long bookId){
+        return ResponseEntity.ok(reservationService.getBookReservations(bookId));
+    }
+
+// endregion Reservation
 
 }

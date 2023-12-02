@@ -8,12 +8,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.IOException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageName;
 
 @Service
@@ -34,7 +30,6 @@ public class JwtServiceImpl implements JwtService {
 
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -126,11 +121,8 @@ public class JwtServiceImpl implements JwtService {
         var validUserTokens = tokenRepository.findAllByUser_IdAndExpiredFalseAndRevokedFalse(user.getId());
         if (validUserTokens.isEmpty())
             return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
+
+        tokenRepository.deleteAll(validUserTokens);
     }
     @Override
     public User getUserFromRequest(HttpServletRequest request) {
@@ -146,7 +138,6 @@ public class JwtServiceImpl implements JwtService {
         }
         else {
             final String errorMessage = "Cannot extract user from token";
-            logger.warn(errorMessage);
             throw new BadTokenFormatException(errorMessage);
         }
     }

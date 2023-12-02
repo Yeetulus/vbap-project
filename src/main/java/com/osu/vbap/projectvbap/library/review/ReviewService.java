@@ -6,10 +6,11 @@ import com.osu.vbap.projectvbap.user.User;
 import java.util.List;
 
 public interface ReviewService {
-    Review saveReview(Review review);
-    List<Review> getAllUserReviews(User user);
-    List<Review> getAllBookReviews(Book book);
+    ReviewMessageDTO createReview(ReviewRequest request, User user);
+    ReviewMessageDTO updateReview(Long reviewId, ReviewRequest request, User user);
+    List<ReviewMessageDTO> getAllUserReviews(User user);
+    List<ReviewMessageDTO> getAllBookReviews(Book book);
     ReviewsDTO getReviewData(Long bookId);
     Review getReviewById(Long id);
-    void deleteReview(Long id);
+    void deleteReview(User user, Long id);
 }

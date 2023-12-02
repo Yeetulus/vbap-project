@@ -9,9 +9,8 @@ public interface GenreService {
     List<Genre> getGenres(List<String> genres);
     Genre createGenre(String genreName);
     Genre updateGenre(String genreName, String newName);
-    boolean deleteGenre(String genreName);
+    void deleteGenre(String genreName);
 
     Genre getById(Long id);
     Genre getByName(String name);
-    List<Genre> getAllGenres();
 }

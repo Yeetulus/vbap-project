@@ -58,8 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/member/**").hasAnyAuthority(ADMIN.name(), MEMBER.name())
                         .requestMatchers("/api/librarian/**").hasAnyAuthority(LIBRARIAN.name(), ADMIN.name())
 
-                        // TODO AUTHENTICATED()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

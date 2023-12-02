@@ -4,6 +4,9 @@ import com.osu.vbap.projectvbap.auth.model.AuthRequest;
 import com.osu.vbap.projectvbap.auth.model.AuthResponse;
 import com.osu.vbap.projectvbap.auth.model.ChangePasswordRequest;
 import com.osu.vbap.projectvbap.auth.model.RegisterRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -43,6 +46,7 @@ public class AuthController {
         service.refreshToken(request, response);
     }
     @PutMapping("/user/change-password")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<Boolean> changePassword(
             @Valid @RequestBody ChangePasswordRequest passwordRequest,
             HttpServletRequest request){

@@ -3,8 +3,6 @@ package com.osu.vbap.projectvbap.library.reservation;
 import com.osu.vbap.projectvbap.exception.ItemAlreadyReservedException;
 import com.osu.vbap.projectvbap.exception.ItemNotAvailableException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
-import com.osu.vbap.projectvbap.jwt.JwtService;
-import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.book.BookService;
 import com.osu.vbap.projectvbap.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessage;
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +30,12 @@ public class ReservationServiceImpl implements ReservationService {
         var bookToReserve = bookService.getBook(bookId);
         var user = userService.getUser(userId);
 
-        var reservations = getReservationsByBook(bookToReserve);
-        reservations.forEach(r -> {
-            if(r.getUser().getId().equals(user.getId()))
-                throw new ItemAlreadyReservedException(String.format("Book %s is already reserved by user %s", bookId, userId));
-        });
+        if(reservationRepository.existsByUserAndBook(user, bookToReserve))
+                throw new ItemAlreadyReservedException(String.format("Book %s is already reserved", bookId));
+
 
         int availableCount = bookService.getAvailableCount(bookToReserve);
-        if(availableCount <= reservations.size()) throw new ItemNotAvailableException(String.format("Book with ID %s is not available", bookId));
+        if(availableCount < 1 ) throw new ItemNotAvailableException(String.format("Book with ID %s is not available", bookId));
 
         var reservation = Reservation.builder()
                 .book(bookToReserve)
@@ -49,10 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservationRepository.save(reservation);
     }
-    @Override
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
+
     @Override
     public void cancelPotentialReservation(Long bookId, Long userId) {
 
@@ -72,24 +64,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
-    }
-    @Override
-    public Reservation getReservationById(Long id) {
-        return reservationRepository.findById(id).orElseThrow(() ->
-                new ItemNotFoundException(String.format(notFoundMessageId, id)));
+    public List<Reservation> getUserReservations(Long userId) {
+        var user = userService.getUser(userId);
+        return reservationRepository.findAllByUser(user);
     }
 
     @Override
-    public List<Reservation> getReservationsByBook(Book book) {
+    public List<Reservation> getBookReservations(Long bookId) {
+        var book = bookService.getBook(bookId);
         return reservationRepository.findAllByBook(book);
-    }
-
-    @Override
-    public void deleteReservation(Long id) {
-        var toDelete = reservationRepository.findById(id).orElseThrow(() ->
-                new ItemNotFoundException(String.format(notFoundMessageId, id)));
-        reservationRepository.delete(toDelete);
     }
 }

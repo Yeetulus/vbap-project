@@ -9,22 +9,21 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByGenre_NameInIgnoreCase(List<String> genres);
+    List<Book> findAllByGenreIdIn(List<Long> genreIds);
 
     @Query("SELECT DISTINCT b FROM Book b " +
             "LEFT JOIN b.authors a " +
             "LEFT JOIN b.genre g " +
             "WHERE " +
-            "(g.name IN :genres) AND " +
+            "(g.id IN :genres) AND " +
             "( :searchedValue IS NULL OR " +
             "  ( LOWER(b.title) LIKE LOWER(CONCAT('%', :searchedValue, '%')) OR " +
-            "    LOWER(a.name) LIKE LOWER(CONCAT('%', :searchedValue, '%')) OR " +
-            "    LOWER(g.name) LIKE LOWER(CONCAT('%', :searchedValue, '%'))" +
+            "    LOWER(a.name) LIKE LOWER(CONCAT('%', :searchedValue, '%'))  " +
             "  )" +
             ")"
     )
     List<Book> findByValueAndGenres(
-            @Param("genres") List<String> genres,
+            @Param("genres") List<Long> genres,
             @Param("searchedValue") String searchedValue
     );
 

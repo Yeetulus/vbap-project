@@ -7,11 +7,8 @@ import java.util.List;
 public interface ReservationService {
 
     Reservation createReservation(Long bookId, Long userId);
-    Reservation saveReservation(Reservation reservation);
     void cancelPotentialReservation(Long bookId, Long userId);
     void cancelReservation(Long bookId, Long userId);
-    List<Reservation> getAllReservations();
-    Reservation getReservationById(Long id);
-    List<Reservation> getReservationsByBook(Book book);
-    void deleteReservation(Long id);
+    List<Reservation> getUserReservations(Long userId);
+    List<Reservation> getBookReservations(Long bookId);
 }
