@@ -2,7 +2,6 @@ package com.osu.vbap.projectvbap.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.osu.vbap.projectvbap.jwt.JwtService;
 import com.osu.vbap.projectvbap.library.loan.Loan;
 import com.osu.vbap.projectvbap.library.reservation.Reservation;
 import com.osu.vbap.projectvbap.library.review.Review;
@@ -10,14 +9,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -26,6 +21,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Table(name = "library_users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -40,7 +40,7 @@ public class MemberController {
             HttpServletRequest request
     ){
         User jwtUser = userService.getUserFromRequest(request);
-        return ResponseEntity.ok(reservationService.createReservation(bookId, jwtUser.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.createReservation(bookId, jwtUser.getId()));
     }
 
     @DeleteMapping("/reservation/cancel")
@@ -51,6 +51,12 @@ public class MemberController {
         User jwtUser = userService.getUserFromRequest(request);
         reservationService.cancelReservation(bookId, jwtUser.getId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("reservation/get-all")
+    public ResponseEntity<List<Reservation>> getReservations(HttpServletRequest request){
+        User jwtUser = userService.getUserFromRequest(request);
+        return ResponseEntity.ok(reservationService.getUserReservations(jwtUser.getId()));
     }
 
 // endregion Reservation

@@ -1,13 +1,13 @@
 package com.osu.vbap.projectvbap.library.copy;
 
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
-import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.book.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.foundReferencesMessage;
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 
 @Service
@@ -51,5 +51,13 @@ public class BookCopyServiceImpl implements BookCopyService{
     public List<BookCopy> getCopiesByBook(Long bookId) {
         var book = bookService.getBook(bookId);
         return bookCopyRepository.findAllByBook(book);
+    }
+
+    @Override
+    public void deleteCopy(Long copyId) {
+        var copy = getCopy(copyId);
+        if(!copy.getLoans().isEmpty())
+            throw new IllegalStateException(String.format(foundReferencesMessage, "copy"));
+        bookCopyRepository.delete(copy);
     }
 }

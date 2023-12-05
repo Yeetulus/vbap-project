@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.*;
 
@@ -29,7 +28,7 @@ public class GenreServiceImpl implements GenreService{
             throw new ItemAlreadyExistsException(String.format(alreadyExistsMessageName, "Genre", genreName));
 
         var newGenre = Genre.builder()
-                .name(genreName.toLowerCase(Locale.ROOT)).build();
+                .name(genreName).build();
 
         return genreRepository.save(newGenre);
     }
@@ -44,7 +43,22 @@ public class GenreServiceImpl implements GenreService{
     public void deleteGenre(String genreName) {
         var toDelete = genreRepository.findByName(genreName).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, genreName)));
-        genreRepository.delete(toDelete);
+
+        delete(toDelete);
+    }
+
+    @Override
+    public void deleteGenre(Long genreId) {
+        var toDelete = genreRepository.findById(genreId).orElseThrow(() ->
+                new ItemNotFoundException(String.format(notFoundMessageId, genreId)));
+
+        delete(toDelete);
+    }
+
+    private void delete(Genre genre){
+        if(!genre.getBooks().isEmpty())
+            throw new IllegalStateException(String.format(foundReferencesMessage, "genre"));
+        genreRepository.delete(genre);
     }
 
     @Override

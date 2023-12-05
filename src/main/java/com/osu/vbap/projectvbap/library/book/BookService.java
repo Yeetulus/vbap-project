@@ -9,4 +9,5 @@ public interface BookService {
     int getAvailableCount(Long id);
     Book createBook(BookRequest request);
     Book updateBook(BookRequest request);
+    void deleteBook(Long bookId);
 }

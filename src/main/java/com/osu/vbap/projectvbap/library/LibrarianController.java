@@ -57,9 +57,15 @@ public class LibrarianController {
     }
     @DeleteMapping("/genre/delete")
     public ResponseEntity<Boolean> deleteGenre(
-            @NotBlank @RequestParam String genreName
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long id
     ) {
-        genreService.deleteGenre(genreName);
+        if(name == null && id == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST , paramMessage);
+        }
+        else if (name != null) genreService.deleteGenre(name);
+        else genreService.deleteGenre(id);
+
         return ResponseEntity.ok().build();
     }
 
@@ -118,6 +124,7 @@ public class LibrarianController {
         return ResponseEntity.ok(authorService.getAllAuthors());
     }
 
+
 // endregion Author
 
 // region Loans
@@ -144,6 +151,10 @@ public class LibrarianController {
     public ResponseEntity<List<Loan>> getUserLoans(@RequestParam Long userId) {
         return ResponseEntity.ok(loanService.getAllLoansByUserId(userId));
     }
+    @GetMapping("/loan/user-loans-active")
+    public ResponseEntity<List<Loan>> getActiveUserLoans(@RequestParam Long userId) {
+        return ResponseEntity.ok(loanService.getAllActiveLoansByUser(userId));
+    }
 
 // endregion Loans
 
@@ -156,6 +167,11 @@ public class LibrarianController {
     @PutMapping("/book/update")
     public ResponseEntity<Book> updateBook(@Valid @RequestBody BookRequest request){
         return ResponseEntity.ok(bookService.updateBook(request));
+    }
+    @DeleteMapping("/book/delete")
+    public ResponseEntity<Void> updateBook(@RequestParam Long id){
+        bookService.deleteBook(id);
+        return ResponseEntity.ok().build();
     }
 
 
@@ -179,6 +195,12 @@ public class LibrarianController {
     public ResponseEntity<BookCopy> updateBookCopy(@RequestParam Long copyId,
                                                    @RequestParam BookCopyCondition condition){
         return ResponseEntity.ok(bookCopyService.updateCopy(copyId, condition));
+    }
+
+    @DeleteMapping("/copy/delete")
+    public ResponseEntity<Void> deleteBookCopy(@RequestParam Long copyId){
+        bookCopyService.deleteCopy(copyId);
+        return ResponseEntity.ok().build();
     }
 
 

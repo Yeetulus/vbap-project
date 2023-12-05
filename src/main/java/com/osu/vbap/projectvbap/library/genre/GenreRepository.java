@@ -9,6 +9,5 @@ public interface GenreRepository extends JpaRepository<Genre, Long> {
 
     Optional<Genre> findByName(String name);
     boolean existsByName(String name);
-    void deleteByName(String name);
     List<Genre> findByNameIn(List<String> names);
 }

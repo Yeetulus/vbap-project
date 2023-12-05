@@ -9,8 +9,5 @@ import java.util.Optional;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
-    List<Loan> findAllByCopy_Book(Book book);
     List<Loan> findAllByUser(User user);
-
-    Optional<Loan> findByCopy_Id(Long id);
 }

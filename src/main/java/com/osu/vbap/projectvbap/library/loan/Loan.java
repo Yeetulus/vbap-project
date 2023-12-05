@@ -1,5 +1,6 @@
 package com.osu.vbap.projectvbap.library.loan;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.osu.vbap.projectvbap.library.copy.BookCopy;
 import com.osu.vbap.projectvbap.user.User;
 import jakarta.persistence.*;
@@ -21,6 +22,7 @@ public class Loan {
     @ManyToOne
     private BookCopy copy;
     @ManyToOne
+    @JsonIgnoreProperties({"loans", "reservations", "reviews"})
     private User user;
 
     @Temporal(TemporalType.DATE)

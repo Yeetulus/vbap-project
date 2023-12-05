@@ -4,7 +4,6 @@ import com.osu.vbap.projectvbap.exception.ItemNotAvailableException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import com.osu.vbap.projectvbap.exception.ItemNotOwnedException;
 import com.osu.vbap.projectvbap.exception.LoanAlreadyReturnedException;
-import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.copy.BookCopyCondition;
 import com.osu.vbap.projectvbap.library.copy.BookCopyService;
 import com.osu.vbap.projectvbap.library.reservation.ReservationService;
@@ -101,6 +100,12 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public List<Loan> getAllActiveLoansByUser(User user) {
         return getAllLoansByUser(user).stream().filter(l -> l.getActualReturnDate() == null).toList();
+    }
+
+    @Override
+    public List<Loan> getAllActiveLoansByUser(Long userId) {
+        var user = userService.getUser(userId);
+        return getAllActiveLoansByUser(user);
     }
 
     @Override

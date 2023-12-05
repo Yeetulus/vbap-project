@@ -8,6 +8,7 @@ import com.osu.vbap.projectvbap.library.author.Author;
 import com.osu.vbap.projectvbap.library.reservation.Reservation;
 import com.osu.vbap.projectvbap.library.review.Review;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.Set;
@@ -23,7 +24,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
     private String title;
 
     @ManyToOne
@@ -42,11 +43,11 @@ public class Book {
     @JsonIgnoreProperties({"book"})
     private Set<BookCopy> copies;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Review> reviews;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private Set<Reservation> reservations;
 }

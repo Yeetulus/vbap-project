@@ -1,6 +1,5 @@
 package com.osu.vbap.projectvbap.library.loan;
 
-import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.user.User;
 
 import java.util.List;
@@ -12,5 +11,6 @@ public interface LoanService {
     List<Loan> getAllLoansByUserId(Long id);
     List<Loan> getAllLoansByUser(User user);
     List<Loan> getAllActiveLoansByUser(User user);
+    List<Loan> getAllActiveLoansByUser(Long userId);
     Loan getLoanById(Long id);
 }

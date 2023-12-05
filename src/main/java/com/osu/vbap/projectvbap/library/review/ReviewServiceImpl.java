@@ -3,7 +3,6 @@ package com.osu.vbap.projectvbap.library.review;
 import com.osu.vbap.projectvbap.exception.ItemAlreadyExistsException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import com.osu.vbap.projectvbap.exception.ItemNotOwnedException;
-import com.osu.vbap.projectvbap.library.book.Book;
 import com.osu.vbap.projectvbap.library.book.BookService;
 import com.osu.vbap.projectvbap.library.loan.LoanService;
 import com.osu.vbap.projectvbap.user.User;
@@ -77,17 +76,11 @@ public class ReviewServiceImpl implements ReviewService{
         return createReviewDTOList(reviews);
     }
 
-    @Override
-    public List<ReviewMessageDTO> getAllBookReviews(Book book) {
-        var reviews = reviewRepository.findAllByBook(book);
-        return createReviewDTOList(reviews);
-    }
-
     private List<ReviewMessageDTO> createReviewDTOList(List<Review> reviews){
         return reviews.stream()
                 .map(r -> ReviewMessageDTO.builder()
                         .bookId(r.getBook().getId())
-                        .name(String.format("%s %s", r.getUser().getFirstName(), r.getUser().getLastName()))
+                        .name(String.format("%s", r.getUser().getFirstName()))
                         .comment(r.getComment())
                         .rating(r.getRating())
                         .build())
@@ -99,8 +92,9 @@ public class ReviewServiceImpl implements ReviewService{
         var reviews = reviewRepository.findAllByBook_Id(bookId);
 
         var reviewsWithComments = reviews.stream().filter(review ->
-                !(review.getComment() != null
-                && !review.getComment().isBlank())).toList();
+                (review.getComment() != null
+                && !review.getComment().isBlank()))
+                .toList();
         List<ReviewMessageDTO> messages = createReviewDTOList(reviewsWithComments);
 
         float average = (float) reviews.stream()
@@ -115,11 +109,6 @@ public class ReviewServiceImpl implements ReviewService{
                 .build();
     }
 
-    @Override
-    public Review getReviewById(Long id) {
-        return reviewRepository.findById(id).orElseThrow(()->
-                new ItemNotFoundException(String.format(notFoundMessageId, id)));
-    }
     @Override
     public void deleteReview(User user, Long id) {
         var review = reviewRepository.findById(id).orElseThrow(() ->

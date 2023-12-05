@@ -47,7 +47,7 @@ public class AuthorServiceImpl implements AuthorService{
     public Author updateAuthor(Long id, String newName) {
         var existingAuthor = authorRepository.findById(id).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, id)));
-        existingAuthor.setName(newName.toLowerCase());
+        existingAuthor.setName(newName);
         return authorRepository.save(existingAuthor);
     }
 
@@ -55,14 +55,23 @@ public class AuthorServiceImpl implements AuthorService{
     public void deleteAuthorById(Long id) {
         var authorToDelete = authorRepository.findById(id).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, id)));
-        authorRepository.delete(authorToDelete);
+
+        delete(authorToDelete);
     }
 
     @Override
     public void deleteAuthorByName(String name) {
         var authorToDelete = authorRepository.findByName(name).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, name)));
-        authorRepository.delete(authorToDelete);
+
+        delete(authorToDelete);
+    }
+
+    private void delete(Author author){
+        if(!author.getBooks().isEmpty())
+            throw new IllegalStateException(String.format(foundReferencesMessage, "author"));
+
+        authorRepository.delete(author);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.osu.vbap.projectvbap.library.genre;
 
-import org.springframework.http.ProblemDetail;
-
 import java.util.List;
 
 public interface GenreService {
@@ -10,6 +8,7 @@ public interface GenreService {
     Genre createGenre(String genreName);
     Genre updateGenre(String genreName, String newName);
     void deleteGenre(String genreName);
+    void deleteGenre(Long genreId);
 
     Genre getById(Long id);
     Genre getByName(String name);

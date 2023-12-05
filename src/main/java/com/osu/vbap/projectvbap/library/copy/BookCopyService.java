@@ -1,7 +1,5 @@
 package com.osu.vbap.projectvbap.library.copy;
 
-import com.osu.vbap.projectvbap.library.book.Book;
-
 import java.util.List;
 
 public interface BookCopyService {
@@ -11,4 +9,5 @@ public interface BookCopyService {
     BookCopy updateCopy(BookCopy copy, BookCopyCondition condition);
     BookCopy getCopy(Long copyId);
     List<BookCopy> getCopiesByBook(Long bookId);
+    void deleteCopy(Long copyId);
 }
