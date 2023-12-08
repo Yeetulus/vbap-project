@@ -20,7 +20,7 @@ public interface AuthService {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException, BadTokenFormatException;
-    boolean changePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request);
-    boolean forceChangePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request);
+    void changePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request);
+    void forceChangePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request);
 
 }

@@ -9,7 +9,6 @@ import com.osu.vbap.projectvbap.exception.BadTokenFormatException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import com.osu.vbap.projectvbap.exception.UserAlreadyExistsException;
 import com.osu.vbap.projectvbap.jwt.JwtService;
-import com.osu.vbap.projectvbap.library.author.AuthorService;
 import com.osu.vbap.projectvbap.user.Role;
 import com.osu.vbap.projectvbap.user.User;
 import com.osu.vbap.projectvbap.user.UserRepository;
@@ -151,9 +150,8 @@ public class AuthServiceImpl implements AuthService {
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }
     }
-    // TODO CHANGE TO VOID
     @Override
-    public boolean changePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request){
+    public void changePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request){
         User requestUser = repository.findByEmail(passwordRequest.getEmail()).orElseThrow(() ->
                         new ItemNotFoundException(String.format(notFoundMessageName, passwordRequest.getEmail())));
         User httpRequestUser = (User) request.getAttribute("jwtUser");
@@ -164,10 +162,10 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, message);
         }
 
-        return changeUserPassword(passwordRequest, requestUser) != null;
+        changeUserPassword(passwordRequest, requestUser);
     }
     @Override
-    public boolean forceChangePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request) {
+    public void forceChangePassword(ChangePasswordRequest passwordRequest, HttpServletRequest request) {
         User requestUser = repository.findByEmail(passwordRequest.getEmail()).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageName, passwordRequest.getEmail())));
         User httpRequestUser = (User) request.getAttribute("jwtUser");
@@ -176,9 +174,9 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        return changeUserPassword(passwordRequest, requestUser) != null;
+        changeUserPassword(passwordRequest, requestUser);
     }
-    private User changeUserPassword(ChangePasswordRequest request, User user){
+    private void changeUserPassword(ChangePasswordRequest request, User user){
 
         String currentEncoded = passwordEncoder.encode(request.getCurrentPassword());
         if(!user.getPassword().equals(currentEncoded)){
@@ -190,7 +188,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(newEncoded);
 
         jwtService.revokeAllUserTokens(user);
-        return repository.save(user);
+        repository.save(user);
     }
 
 }

@@ -4,17 +4,13 @@ import com.osu.vbap.projectvbap.auth.model.AuthRequest;
 import com.osu.vbap.projectvbap.auth.model.AuthResponse;
 import com.osu.vbap.projectvbap.auth.model.ChangePasswordRequest;
 import com.osu.vbap.projectvbap.auth.model.RegisterRequest;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -51,7 +47,8 @@ public class AuthController {
             @Valid @RequestBody ChangePasswordRequest passwordRequest,
             HttpServletRequest request){
 
-        return ResponseEntity.ok(service.changePassword(passwordRequest, request));
+        service.changePassword(passwordRequest, request);
+        return ResponseEntity.ok().build();
     }
 
 }

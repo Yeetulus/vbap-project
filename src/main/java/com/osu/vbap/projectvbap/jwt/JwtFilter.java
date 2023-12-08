@@ -1,6 +1,5 @@
 package com.osu.vbap.projectvbap.jwt;
 
-import com.osu.vbap.projectvbap.exception.BadTokenFormatException;
 import com.osu.vbap.projectvbap.exception.ItemNotFoundException;
 import com.osu.vbap.projectvbap.user.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -9,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageId;
 import static com.osu.vbap.projectvbap.exception.ExceptionMessageUtil.notFoundMessageName;
 
 @Component
