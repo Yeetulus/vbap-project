@@ -9,8 +9,10 @@ import com.osu.vbap.projectvbap.library.reservation.Reservation;
 import com.osu.vbap.projectvbap.library.review.Review;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Date;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -29,6 +31,11 @@ public class Book {
 
     @ManyToOne
     private Genre genre;
+
+    @NotNull
+    private Long pages;
+
+    private Date releaseDate;
 
     @ManyToMany
     @JoinTable(

@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService{
     private final GenreService genreService;
     private final AuthorService authorService;
 
-    public List<Book> searchBooks(String searchedValue, List<Long> genres, boolean searchOnlyAvailable) {
+    public List<Book> searchBooks(String searchedValue, List<Long> genres, Long authorId, boolean searchOnlyAvailable) {
         List<Book> books;
         if (searchedValue != null && !searchedValue.isEmpty() && genres != null && !genres.isEmpty()) {
             books = bookRepository.findByValueAndGenres(genres, searchedValue);
@@ -35,6 +35,10 @@ public class BookServiceImpl implements BookService{
             books = bookRepository.findAll();
         }
 
+        if(authorId != null)
+        {
+            books = books.stream().filter(book -> book.getAuthors().stream().anyMatch(author -> author.getId().equals(authorId))).toList();
+        }
         if (searchOnlyAvailable) {
             books = books.stream().filter(book -> getAvailableCount(book) > 0).toList();
         }
@@ -77,6 +81,8 @@ public class BookServiceImpl implements BookService{
                 .genre(genre)
                 .authors(authors)
                 .title(request.getTitle())
+                .pages(request.getPages())
+                .releaseDate(request.getReleaseDate())
                 .build();
 
         return bookRepository.save(book);
@@ -93,6 +99,8 @@ public class BookServiceImpl implements BookService{
         book.setTitle(request.getTitle());
         book.setGenre(genre);
         book.setAuthors(new HashSet<>(authors));
+        book.setReleaseDate(request.getReleaseDate());
+        book.setPages(request.getPages());
 
         return bookRepository.save(book);
     }

@@ -29,9 +29,10 @@ public class BaseController {
     public ResponseEntity<List<Book>> searchBooks(
             @RequestParam(required = false) String searchedValue,
             @RequestParam(required = false) List<Long> genreIds,
+            @RequestParam(required = false) Long authorId,
             @RequestParam(defaultValue = "false") boolean searchOnlyAvailable
     ) {
-        return ResponseEntity.ok(bookService.searchBooks(searchedValue, genreIds, searchOnlyAvailable));
+        return ResponseEntity.ok(bookService.searchBooks(searchedValue, genreIds, authorId, searchOnlyAvailable));
     }
 
     @GetMapping("/genres")

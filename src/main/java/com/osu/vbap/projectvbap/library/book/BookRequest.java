@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,11 @@ public class BookRequest {
 
     @NotBlank
     private String title;
+
+    @NotNull
+    private Long pages;
+
+    private Date releaseDate;
 
     @NotNull
     private Long genreId;

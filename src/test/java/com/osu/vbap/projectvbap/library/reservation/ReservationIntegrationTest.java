@@ -65,6 +65,7 @@ public class ReservationIntegrationTest {
 
         Book book = Book.builder()
                 .title("Hamlet")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
@@ -120,6 +121,7 @@ public class ReservationIntegrationTest {
         Book book = Book.builder()
                 .title("Hamlet")
                 .genre(genre)
+                .pages(4L)
                 .build();
 
         BookCopy copy1 = BookCopy.builder()
@@ -180,6 +182,7 @@ public class ReservationIntegrationTest {
         Book book = Book.builder()
                 .title("Hamlet")
                 .genre(genre)
+                .pages(4L)
                 .build();
 
         user = userRepository.save(user);

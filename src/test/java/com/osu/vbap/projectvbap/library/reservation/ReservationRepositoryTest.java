@@ -71,11 +71,13 @@ class ReservationRepositoryTest {
 
         Book book1 = Book.builder()
                 .title("Hamlet")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
         Book book2 = Book.builder()
                 .title("Macbeth")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
@@ -132,6 +134,7 @@ class ReservationRepositoryTest {
 
         Book book = Book.builder()
                 .title("Hamlet")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
@@ -172,6 +175,7 @@ class ReservationRepositoryTest {
         Genre genre = Genre.builder().name("Drama").build();
         Book book1 = Book.builder()
                 .title("Hamlet")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
@@ -236,6 +240,7 @@ class ReservationRepositoryTest {
         Genre genre = Genre.builder().name("Drama").build();
         Book book1 = Book.builder()
                 .title("Hamlet")
+                .pages(4L)
                 .genre(genre)
                 .build();
 
