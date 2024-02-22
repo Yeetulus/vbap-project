@@ -23,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/member")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 public class MemberController {

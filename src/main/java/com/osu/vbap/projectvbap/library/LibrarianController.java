@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/librarian")
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
 @SecurityRequirement(name = "bearerAuth")
 public class LibrarianController {
 
