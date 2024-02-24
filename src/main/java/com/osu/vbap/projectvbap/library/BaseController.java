@@ -6,8 +6,6 @@ import com.osu.vbap.projectvbap.library.genre.Genre;
 import com.osu.vbap.projectvbap.library.genre.GenreService;
 import com.osu.vbap.projectvbap.library.review.ReviewsDTO;
 import com.osu.vbap.projectvbap.library.review.ReviewService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
