@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public List<Loan> getAllLoansByUser(User user) {
-        return loanRepository.findAllByUser(user);
+        return loanRepository.findAllByUser(user).stream().sorted(Comparator.comparing(Loan::getScheduledReturnDate)).toList();
     }
 
     @Override
