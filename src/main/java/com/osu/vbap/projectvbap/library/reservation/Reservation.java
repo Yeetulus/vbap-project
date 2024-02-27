@@ -24,7 +24,7 @@ public class Reservation {
     private User user;
 
     @ManyToOne
-    @JsonIgnoreProperties({"copies", "reviews", "authors"})
+    @JsonIgnoreProperties({"copies", "reviews"})
     @NotNull
     private Book book;
 }
