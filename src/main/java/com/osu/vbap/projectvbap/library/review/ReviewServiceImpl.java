@@ -48,6 +48,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     private ReviewMessageDTO buildReviewMessage(Review review) {
         return ReviewMessageDTO.builder()
+                .userId(review.getUser().getId())
                 .bookId(review.getBook().getId())
                 .rating(review.getRating())
                 .name(review.getUser().getFirstName())
@@ -56,12 +57,12 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public ReviewMessageDTO updateReview(Long reviewId, ReviewRequest reviewRequest, User user) {
-        var review = reviewRepository.findById(reviewId).orElseThrow(() ->
-                new ItemNotFoundException(String.format(notFoundMessageId, reviewId)));
+    public ReviewMessageDTO updateReview(Long bookId, ReviewRequest reviewRequest, User user) {
+        var review = reviewRepository.findByBook_IdAndUser_Id(bookId, user.getId()).orElseThrow(() ->
+                new ItemNotFoundException(String.format(notFoundMessageId, bookId)));
 
         if(!review.getUser().getId().equals(user.getId()))
-            throw new ItemNotOwnedException(String.format(notOwnedMessage, reviewId));
+            throw new ItemNotOwnedException(String.format(notOwnedMessage, bookId));
 
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getComment());
@@ -79,6 +80,7 @@ public class ReviewServiceImpl implements ReviewService{
     private List<ReviewMessageDTO> createReviewDTOList(List<Review> reviews){
         return reviews.stream()
                 .map(r -> ReviewMessageDTO.builder()
+                        .userId(r.getUser().getId())
                         .bookId(r.getBook().getId())
                         .name(String.format("%s", r.getUser().getFirstName()))
                         .comment(r.getComment())
@@ -111,7 +113,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public void deleteReview(User user, Long id) {
-        var review = reviewRepository.findById(id).orElseThrow(() ->
+        var review = reviewRepository.findByBook_IdAndUser_Id(id, user.getId()).orElseThrow(() ->
                 new ItemNotFoundException(String.format(notFoundMessageId, id)));
 
         if(!review.getUser().getId().equals(user.getId()))

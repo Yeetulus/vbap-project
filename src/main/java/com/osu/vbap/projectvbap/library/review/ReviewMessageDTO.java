@@ -10,6 +10,7 @@ import lombok.*;
 public class ReviewMessageDTO {
 
     private Long bookId;
+    private Long userId;
     private String name;
     private String comment;
     private int rating;

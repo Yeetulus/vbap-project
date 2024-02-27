@@ -104,6 +104,7 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .userRole(user.getRole())
+                .userId(user.getId())
                 .build();
     }
 
@@ -129,6 +130,7 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .userRole(user.getRole())
+                .userId(user.getId())
                 .build();
     }
 
@@ -149,6 +151,7 @@ public class AuthServiceImpl implements AuthService {
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .userRole(user.getRole())
+                    .userId(user.getId())
                     .build();
             new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
         }

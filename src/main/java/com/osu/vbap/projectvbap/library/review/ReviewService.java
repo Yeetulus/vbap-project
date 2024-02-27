@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReviewService {
     ReviewMessageDTO createReview(ReviewRequest request, User user);
-    ReviewMessageDTO updateReview(Long reviewId, ReviewRequest request, User user);
+    ReviewMessageDTO updateReview(Long bookId, ReviewRequest request, User user);
     List<ReviewMessageDTO> getAllUserReviews(User user);
     ReviewsDTO getReviewData(Long bookId);
     void deleteReview(User user, Long id);

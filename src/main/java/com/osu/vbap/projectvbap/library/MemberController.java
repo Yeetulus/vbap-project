@@ -101,11 +101,11 @@ public class MemberController {
 
     @PutMapping("/review/edit")
     public ResponseEntity<ReviewMessageDTO> editReview(
-            @RequestParam Long reviewId,
+            @RequestParam Long bookId,
             @Valid @RequestBody ReviewRequest reviewRequest,
             HttpServletRequest request) {
         User jwtUser = userService.getUserFromRequest(request);
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(reviewId, reviewRequest, jwtUser));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(bookId, reviewRequest, jwtUser));
     }
 
     @GetMapping("review/get-all")
@@ -117,10 +117,10 @@ public class MemberController {
 
     @DeleteMapping("/review/delete")
     public ResponseEntity<Void> deleteReview(
-            @RequestParam Long reviewId,
+            @RequestParam Long bookId,
             HttpServletRequest request) {
         User jwtUser = userService.getUserFromRequest(request);
-        reviewService.deleteReview(jwtUser, reviewId);
+        reviewService.deleteReview(jwtUser, bookId);
         return ResponseEntity.ok().build();
     }
 

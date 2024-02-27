@@ -19,4 +19,6 @@ public class AuthResponse {
     private String refreshToken;
     @JsonProperty("role")
     private Role userRole;
+    @JsonProperty("user_id")
+    private Long userId;
 }
