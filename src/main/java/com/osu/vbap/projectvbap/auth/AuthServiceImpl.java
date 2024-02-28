@@ -180,7 +180,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        changeUserPassword(passwordRequest, requestUser);
+        changePassword(passwordRequest, requestUser);
     }
     private void changeUserPassword(ChangePasswordRequest request, User user){
 
@@ -190,6 +190,10 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid current password");
         }
 
+        changePassword(request, user);
+    }
+
+    private void changePassword(ChangePasswordRequest request, User user) {
         String newEncoded = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(newEncoded);
 
