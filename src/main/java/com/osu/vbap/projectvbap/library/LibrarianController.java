@@ -132,10 +132,10 @@ public class LibrarianController {
 
     @PostMapping("/loan/create")
     public ResponseEntity<Loan> createLoan(
-            @RequestParam Long userId,
+            @RequestParam String userEmail,
             @RequestParam Long copyId
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.createLoan(userId, copyId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanService.createLoan(userEmail, copyId));
     }
     @PutMapping("/loan/return")
     public ResponseEntity<Void> updateLoan(

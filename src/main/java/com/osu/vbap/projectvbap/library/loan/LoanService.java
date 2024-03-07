@@ -5,7 +5,7 @@ import com.osu.vbap.projectvbap.user.User;
 import java.util.List;
 
 public interface LoanService {
-    Loan createLoan(Long userId, Long copyId);
+    Loan createLoan(String userEmail, Long copyId);
     void returnCopy(Long loanId);
     Loan extendLoan(Long loanId, Long userId, Integer days);
     List<Loan> getAllLoansByUserEmail(String userEmail);

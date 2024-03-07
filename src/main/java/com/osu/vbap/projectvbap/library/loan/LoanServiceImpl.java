@@ -35,7 +35,7 @@ public class LoanServiceImpl implements LoanService {
     @Value("${library.defaultExtendTime}")
     private int defaultExtendTime;
     @Override
-    public Loan createLoan(Long userId, Long copyId) {
+    public Loan createLoan(String userEmail, Long copyId) {
 
         var bookCopy = bookCopyService.getCopy(copyId);
 
@@ -44,14 +44,15 @@ public class LoanServiceImpl implements LoanService {
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDate today = LocalDate.now();
 
+        var user = userService.getUser(userEmail);
         var newLoan = Loan.builder()
                 .copy(bookCopy)
-                .user(userService.getUser(userId))
+                .user(user)
                 .dateBorrowed(Date.from(today.atStartOfDay(zoneId).toInstant()))
                 .scheduledReturnDate(Date.from(today.plusDays(defaultLoanTime).atStartOfDay(zoneId).toInstant()))
                 .build();
 
-        reservationService.cancelPotentialReservation(bookCopy.getBook().getId(), userId);
+        reservationService.cancelPotentialReservation(bookCopy.getBook().getId(), user.getId());
 
         bookCopyService.updateCopy(bookCopy, BookCopyCondition.BORROWED);
         return loanRepository.save(newLoan);
