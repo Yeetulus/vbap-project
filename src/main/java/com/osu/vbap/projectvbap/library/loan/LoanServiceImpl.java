@@ -104,8 +104,8 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public List<Loan> getAllActiveLoansByUser(Long userId) {
-        var user = userService.getUser(userId);
+    public List<Loan> getAllActiveLoansByUser(String userEmail) {
+        var user = userService.getUser(userEmail);
         return getAllActiveLoansByUser(user);
     }
 

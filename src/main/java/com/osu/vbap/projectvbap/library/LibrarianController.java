@@ -153,8 +153,8 @@ public class LibrarianController {
         return ResponseEntity.ok(loanService.getAllLoansByUserId(userId));
     }
     @GetMapping("/loan/user-loans-active")
-    public ResponseEntity<List<Loan>> getActiveUserLoans(@RequestParam Long userId) {
-        return ResponseEntity.ok(loanService.getAllActiveLoansByUser(userId));
+    public ResponseEntity<List<Loan>> getActiveUserLoans(@RequestParam String userEmail) {
+        return ResponseEntity.ok(loanService.getAllActiveLoansByUser(userEmail));
     }
 
 // endregion Loans

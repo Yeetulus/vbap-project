@@ -11,6 +11,6 @@ public interface LoanService {
     List<Loan> getAllLoansByUserId(Long id);
     List<Loan> getAllLoansByUser(User user);
     List<Loan> getAllActiveLoansByUser(User user);
-    List<Loan> getAllActiveLoansByUser(Long userId);
+    List<Loan> getAllActiveLoansByUser(String userEmail);
     Loan getLoanById(Long id);
 }
