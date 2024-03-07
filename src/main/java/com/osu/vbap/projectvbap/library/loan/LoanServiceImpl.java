@@ -93,6 +93,8 @@ public class LoanServiceImpl implements LoanService {
         }
     }
 
+
+
     @Override
     public List<Loan> getAllLoansByUser(User user) {
         return loanRepository.findAllByUser(user).stream().sorted(Comparator.comparing(Loan::getScheduledReturnDate)).toList();
@@ -110,8 +112,8 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public List<Loan> getAllLoansByUserId(Long id) {
-        var user = userService.getUser(id);
+    public List<Loan> getAllLoansByUserEmail(String userEmail) {
+        var user = userService.getUser(userEmail);
         return getAllLoansByUser(user);
     }
 

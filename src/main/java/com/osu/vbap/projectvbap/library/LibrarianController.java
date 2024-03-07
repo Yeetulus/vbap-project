@@ -149,8 +149,8 @@ public class LibrarianController {
         return ResponseEntity.ok(loanService.getLoanById(loanId));
     }
     @GetMapping("/loan/user-loans")
-    public ResponseEntity<List<Loan>> getUserLoans(@RequestParam Long userId) {
-        return ResponseEntity.ok(loanService.getAllLoansByUserId(userId));
+    public ResponseEntity<List<Loan>> getUserLoans(@RequestParam String userEmail) {
+        return ResponseEntity.ok(loanService.getAllLoansByUserEmail(userEmail));
     }
     @GetMapping("/loan/user-loans-active")
     public ResponseEntity<List<Loan>> getActiveUserLoans(@RequestParam String userEmail) {

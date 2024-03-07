@@ -8,7 +8,7 @@ public interface LoanService {
     Loan createLoan(Long userId, Long copyId);
     void returnCopy(Long loanId);
     Loan extendLoan(Long loanId, Long userId, Integer days);
-    List<Loan> getAllLoansByUserId(Long id);
+    List<Loan> getAllLoansByUserEmail(String userEmail);
     List<Loan> getAllLoansByUser(User user);
     List<Loan> getAllActiveLoansByUser(User user);
     List<Loan> getAllActiveLoansByUser(String userEmail);
