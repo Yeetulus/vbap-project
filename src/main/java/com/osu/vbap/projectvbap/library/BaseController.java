@@ -32,6 +32,13 @@ public class BaseController {
         return ResponseEntity.ok(bookService.searchBooks(searchedValue, genreIds, authorId, searchOnlyAvailable));
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<Book> searchBooks(
+            @RequestParam Long bookId)
+    {
+        return ResponseEntity.ok(bookService.getBook(bookId));
+    }
+
     @GetMapping("/genres")
     public ResponseEntity<List<Genre>> getGenres(
             @RequestParam(required = false) List<String> genreList
